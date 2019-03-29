@@ -24,17 +24,6 @@ class LO2ParameterComponent(ControlSurfaceComponent, LO2Mixin):
     
     @subject_slot('value')
     def _on_value_changed(self):
-        t = self._parameter.canonical_parent.canonical_parent
-        tid, ty = self.track_id_type(t)
-        
-        if self._is_send:
-            s = list(self._parameter.canonical_parent.sends).index(self._parameter)   
-            self.send('/live/'+self._track_types[ty]+'send', tid, s, self._parameter.value)
-        
-        else:    
-            d = list(self._parameter.canonical_parent.canonical_parent.devices).index(self._parameter.canonical_parent)
-            
-            p = list(self._parameter.canonical_parent.parameters).index(self._parameter)
-            
-            self.send('/live/'+self._track_types[ty]+'device/param', tid, d, p, self._parameter.value, str(self._parameter.name))
-            
+        if hasattr(self._parameter.canonical_parent, 'parameters'):
+           p = list(self._parameter.canonical_parent.parameters).index(self._parameter)
+           self._set_param(p, self._parameter)

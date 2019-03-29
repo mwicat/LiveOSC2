@@ -60,7 +60,7 @@ class LO2Mixin:
     _subject_slots = []
     _is_enabled_ovr = True
     _registered_callbacks = []
-    
+
     @staticmethod
     def set_log(func):
         LO2Mixin.log_message = func
@@ -211,6 +211,35 @@ class LO2Mixin:
         return not (len(msg) == 2 or (len(msg) == 3 and msg[2] == 'query'))
 
 
+    def _set_param(self, idx, p):
+        self.send('/plugman/set_param', idx, self._map_text_value(p), self._map_value(p))
 
+    def _clear_param(self, idx):
+        self.send('/plugman/clear_param/%d', idx, 1)
 
+    def _map_value(self, p):
+        value = p.value
+        if p.min != 0 or p.max != 1:
+            value = (value - p.min) / float(p.max - p.min)  # scale value to float
+        return value
 
+    def _map_text_value(self, p):
+        return unicode(p).strip().encode('utf-8')
+
+    def _serialize_param(self, p):
+        name = p.name.encode('utf-8')
+        text = self._map_text_value(p)
+        value = self._map_value(p)
+        param = [name, text, value]
+        return param
+
+    def _refresh_params(self):
+        if self._device is None:
+            return
+        import traceback; traceback.print_stack()
+        self.log_message('refresh params')
+        params = []
+        for p in self._device.parameters:
+            params.extend(self._serialize_param(p))
+        if params:
+            self.send('/plugman/set_params', *params)

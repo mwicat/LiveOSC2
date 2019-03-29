@@ -155,20 +155,6 @@ class LO2ChannelStripComponent(ChannelStripComponent, LO2Mixin):
     @subject_slot('devices')
     def _on_device_list_changed(self):
         if self._track is not None:
-            diff = len(self._track.devices) - len(self._devices)
-
-            if diff > 0:
-                for i in range(diff):
-                    self._devices.append(LO2DeviceComponent())
-
-            if diff < 0:
-                    for i in range(len(self._devices)-1, len(self._track.devices)-1, -1):
-                        self._devices[i].disconnect()
-                        self._devices.remove(self._devices[i])
-        
-            for i,dc in enumerate(self._devices):
-                dc.set_device(self._track.devices[i])
-
             self._send_device_list()
 
 

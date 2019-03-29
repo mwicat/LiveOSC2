@@ -1,4 +1,5 @@
 from _Framework.MixerComponent import MixerComponent
+from _Framework.SubjectSlot import subject_slot
 
 from LO2ChannelStripComponent import LO2ChannelStripComponent
 from LO2Mixin import LO2Mixin, wrap_init
@@ -21,8 +22,6 @@ class LO2MixerComponent(MixerComponent, LO2Mixin):
 
     def _update_mixer_vols(self):
         pass
-
-
 
     def _create_strip(self):
         return LO2ChannelStripComponent()
