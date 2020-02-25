@@ -13,6 +13,7 @@ function install_script {
     target_path="${LIVE_SCRIPTS_DIR}/${script_name}"
     if [ -e "$target_path" ]; then
         echo "Target path '$target_path' already exists"
+        file "$target_path"
         return
     fi
     sudo ln -sfn "$source_path" "$target_path"
