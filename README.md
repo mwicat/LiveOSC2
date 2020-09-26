@@ -16,6 +16,12 @@ Calls without an argument can be passed the dummy argument 'query' for systems t
 * Denotes this is sent automatically from Live upon change  
 [int arg] Optional argument
 
+Testing
+--------
+
+```bash
+oscli dump -P 9000
+```
 
 Installation
 ------------
@@ -23,6 +29,31 @@ Installation
 * Rename LiveOSC2-master to LiveOSC2
 * Move the folder to /Applications/Live xxxx/Contents/App-Resources/MIDI Remote Scripts
 
+
+Device parameters
+----
+
+### set_params
+
+- /plugman/set_params [(str param_name) (str text_value) (str value)]
+
+Example:
+
+```
+/plugman/set_params: Device On, On, 1.0, Threshold, 0.00 dB, 0.850000023842, Ratio, 2.00 : 1, 0.5, Expansion Ratio, 1 : 1.15, 0.149999976158, Attack, 2.00 ms, 0.460206001997, Release, 50.0 ms, 0.199965164065, Auto Release On/Off, Off, 0.0, Output Gain, 0.00 dB, 0.5, Makeup, Off, 0.0, Dry/Wet, 100 %, 1.0, Model, Peak, 0.0, Env Mode, Log, 1.0, Knee, 6.0 dB, 0.3359375, LookAhead, 0 ms, 0.0, S/C Listen, Off, 0.0, S/C On, Off, 0.0, S/C Gain, 0.00 dB, 0.40000000596, S/C Mix, 100 %, 1.0, S/C EQ Type, High pass, 1.0, S/C EQ On, Off, 0.0, S/C EQ Freq, 200 Hz, 0.305267840624, S/C EQ Gain, 0.00 dB, 0.5, S/C EQ Q, 0.71, 0.408567070961
+```
+
+### set_param
+
+- /plugman/set_param (int id) (str text_value) (str value)
+
+Example:
+
+```
+/plugman/set_param: 2, 2.03 : 1, 0.507936537266
+```
+
+- /plugman/clear_param/(int id) 1
 
 Song
 ----
