@@ -236,7 +236,7 @@ class LO2Mixin:
     def _refresh_params(self):
         if self._device is None:
             return
-        import traceback; traceback.print_stack()
+
         self.log_message('refresh params')
         params = []
         for p in self._device.parameters:
