@@ -211,8 +211,14 @@ class LO2Mixin:
         return not (len(msg) == 2 or (len(msg) == 3 and msg[2] == 'query'))
 
 
-    def _set_param(self, idx, p):
-        self.send('/plugman/set_param', idx, self._map_text_value(p), self._map_value(p))
+    def _set_param(self, idx, p, send_name=False):
+        if send_name:
+            name = p.name.encode('utf-8')
+            self.send('/fx/param/{}/name'.format(idx), name)
+
+        self.send('/fx/param/{}/str'.format(idx), self._map_text_value(p))
+        self.send('/fx/param/{}/val'.format(idx), self._map_value(p))
+        #self.send('/plugman/set_param', idx, self._map_text_value(p), self._map_value(p))
 
     def _clear_param(self, idx):
         self.send('/plugman/clear_param/%d', idx, 1)
@@ -226,20 +232,12 @@ class LO2Mixin:
     def _map_text_value(self, p):
         return unicode(p).strip().encode('utf-8')
 
-    def _serialize_param(self, p):
-        name = p.name.encode('utf-8')
-        text = self._map_text_value(p)
-        value = self._map_value(p)
-        param = [name, text, value]
-        return param
-
     def _refresh_params(self):
         if self._device is None:
             return
 
+        self.send('/fx/name', self._device.name)
+
         self.log_message('refresh params')
-        params = []
-        for p in self._device.parameters:
-            params.extend(self._serialize_param(p))
-        if params:
-            self.send('/plugman/set_params', *params)
+        for idx, p in enumerate(self._device.parameters):
+            self._set_param(idx, p, send_name=True)

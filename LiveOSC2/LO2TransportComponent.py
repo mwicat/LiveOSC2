@@ -31,7 +31,7 @@ class LO2TransportComponent(TransportComponent, LO2Mixin):
         self.add_function_callback('/live/undo', s.undo)
         self.add_function_callback('/live/redo', s.redo)
     
-        
+
         self.add_callback('/live/track/create', self._add_track);
         self.add_callback('/live/return/create', self._add_return_track);
         self.add_callback('/live/scene/create', self._add_scene);

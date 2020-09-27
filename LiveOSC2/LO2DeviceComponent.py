@@ -14,9 +14,9 @@ class LO2DeviceComponent(DeviceComponent, LO2Mixin):
         super(LO2DeviceComponent, self).__init__(device_selection_follows_track_selection=False)
 
         self.set_default('_track_id', '_device_id')
-
-        for ty in self._track_types:
-            self.add_callback('/live/'+ty+'device/param', self._device_param)
+        for param_pos in range(128):
+            self.add_callback(
+                '/fx/param/{}/val'.format(param_pos), self._device_param)
 
     def _update_appointed_device(self):
         super(LO2DeviceComponent, self)._update_appointed_device()
@@ -51,4 +51,11 @@ class LO2DeviceComponent(DeviceComponent, LO2Mixin):
         self._refresh_params()
 
     def _device_param(self, msg, src):
-        self._refresh_params()
+        if self._device is not None:
+            addr_fields = msg[0].split('/')
+            p = int(addr_fields[3])
+            v = msg[2]
+            prm = self._device.parameters[p]
+            prm_range = abs(prm.min - prm.max)
+            prm_range_value = v * prm_range
+            prm.value = prm.min + prm_range_value
