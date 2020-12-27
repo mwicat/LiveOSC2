@@ -1,4 +1,8 @@
 from __future__ import with_statement
+
+from ConfigParser import SafeConfigParser
+import os
+
 from _Framework.ControlSurface import ControlSurface
 
 from LO2SessionComponent import LO2SessionComponent
@@ -19,8 +23,21 @@ class LiveOSC2(ControlSurface):
         with self.component_guard():
             LO2OSC.set_log(self.log_message)
             LO2OSC.set_message(self.show_message)
-            self.osc_handler = LO2OSC()
-            
+
+            config_path = os.path.expanduser('~/liveosc2.ini')
+            if os.path.exists(config_path):
+                parser = SafeConfigParser()
+                parser.read(config_path)
+                localhost = parser.get('network', 'localhost')
+                localport = int(parser.get('network', 'localport'))
+                remotehost = parser.get('network', 'remotehost')
+                remoteport = int(parser.get('network', 'remoteport'))
+                self.osc_handler = LO2OSC(
+                    remotehost=remotehost, remoteport=remoteport,
+                    localhost=localhost, localport=localport)
+            else:
+                self.osc_handler = LO2OSC()
+
             LO2Mixin.set_osc_handler(self.osc_handler)
             LO2Mixin.set_log(self.log_message)
             
